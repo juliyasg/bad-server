@@ -124,7 +124,7 @@ export default function AdminOrderDetail() {
                 extraClass: styles.admin__gridRowFullWidth,
             },
         ],
-        [orderData]
+        [navigate, orderData]
     )
 
     if (!orderData) {
