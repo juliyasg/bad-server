@@ -48,6 +48,11 @@ const validate =
 export const phoneRegExp = /^\+?[0-9\s()-]{6,20}$/
 export const noHtmlTagsRegExp = /^(?!.*<[^>]*>).*$/
 
+const noHtmlString = (fieldName: string) =>
+    Joi.string().pattern(noHtmlTagsRegExp).messages({
+        'string.pattern.base': `Поле "${fieldName}" не должно содержать HTML-теги`,
+    })
+
 export enum PaymentType {
     Card = 'card',
     Online = 'online',
@@ -108,13 +113,14 @@ export const validateOrderBody = validate({
         phone: Joi.string().max(20).required().pattern(phoneRegExp).messages({
             'string.empty': 'Не указан телефон',
         }),
-        address: Joi.string().max(300).required().messages({
+        address: noHtmlString('address').max(300).required().messages({
             'string.empty': 'Не указан адрес',
+            'string.pattern.base': 'Поле "address" не должно содержать HTML-теги',
         }),
         total: Joi.number().required().messages({
             'string.empty': 'Не указана сумма заказа',
         }),
-        comment: Joi.string().max(1000).optional().allow(''),
+        comment: noHtmlString('comment').max(1000).optional().allow(''),
     }),
 })
 
@@ -122,20 +128,23 @@ export const validateOrderBody = validate({
 // name и link - обязательные поля, name - от 2 до 30 символов, link - валидный url
 export const validateProductBody = validate({
     body: Joi.object().keys({
-        title: Joi.string().required().min(2).max(30).messages({
+        title: noHtmlString('title').required().min(2).max(30).messages({
             'string.min': 'Минимальная длина поля "name" - 2',
             'string.max': 'Максимальная длина поля "name" - 30',
             'string.empty': 'Поле "title" должно быть заполнено',
+            'string.pattern.base': 'Поле "title" не должно содержать HTML-теги',
         }),
         image: Joi.object().keys({
             fileName: Joi.string().required(),
             originalName: Joi.string().required(),
         }),
-        category: Joi.string().max(100).required().messages({
+        category: noHtmlString('category').max(100).required().messages({
             'string.empty': 'Поле "category" должно быть заполнено',
+            'string.pattern.base': 'Поле "category" не должно содержать HTML-теги',
         }),
-        description: Joi.string().max(5000).required().messages({
+        description: noHtmlString('description').max(5000).required().messages({
             'string.empty': 'Поле "description" должно быть заполнено',
+            'string.pattern.base': 'Поле "description" не должно содержать HTML-теги',
         }),
         price: Joi.number().allow(null),
     }),
@@ -143,16 +152,17 @@ export const validateProductBody = validate({
 
 export const validateProductUpdateBody = validate({
     body: Joi.object().keys({
-        title: Joi.string().min(2).max(30).messages({
+        title: noHtmlString('title').min(2).max(30).messages({
             'string.min': 'Минимальная длина поля "name" - 2',
             'string.max': 'Максимальная длина поля "name" - 30',
+            'string.pattern.base': 'Поле "title" не должно содержать HTML-теги',
         }),
         image: Joi.object().keys({
             fileName: Joi.string().required(),
             originalName: Joi.string().required(),
         }),
-        category: Joi.string().max(100),
-        description: Joi.string().max(5000),
+        category: noHtmlString('category').max(100),
+        description: noHtmlString('description').max(5000),
         price: Joi.number().allow(null),
     }),
 })

@@ -8,6 +8,7 @@ import path from 'path'
 import { DB_ADDRESS } from './config'
 import errorHandler from './middlewares/error-handler'
 import serveStatic from './middlewares/serverStatic'
+import { csrfProtection } from './middlewares/csrf'
 import routes from './routes'
 
 const { PORT = 3000, ORIGIN_ALLOW = 'http://localhost' } = process.env
@@ -36,6 +37,8 @@ app.use(serveStatic(path.join(__dirname, 'public')))
 
 app.use(urlencoded({ extended: true }))
 app.use(json())
+
+app.use(csrfProtection)
 
 app.options('*', cors(corsOptions))
 

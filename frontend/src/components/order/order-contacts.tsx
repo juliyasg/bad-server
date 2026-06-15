@@ -31,14 +31,14 @@ export function OrderContacts() {
             formRef.current
         )
 
-    useEffect(() => {
-        // восстанавливаем значение формы из стора
-        setValuesForm({
-            email: orderPersistData.email,
-            phone: orderPersistData.phone,
-        })
-    }, [orderPersistData, setValuesForm])
-
+        useEffect(() => {
+            setValuesForm({
+                email: orderPersistData.email,
+                phone: orderPersistData.phone,
+                comment: orderPersistData.comment || '',
+            })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
 
     const handleFormSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -88,6 +88,15 @@ export function OrderContacts() {
                 required
                 error={errors.phone}
                 component={InputMask}
+            />
+            <Input
+                value={values.comment || ''}
+                onChange={handleChange}
+                name='comment'
+                type='text'
+                placeholder='Комментарий к заказу'
+                label='Комментарий'
+                error={errors.comment}
             />
 
             <div className={styles.order__buttons}>
