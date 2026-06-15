@@ -55,7 +55,7 @@ class Api {
     }
 
     private getCsrfToken = async () => {
-        const res = await fetch(`${this.baseUrl}/csrf-token`, {
+        const res = await fetch(`${this.baseUrl}/auth/csrf-token`, {
             method: 'GET',
             credentials: 'include',
         })
