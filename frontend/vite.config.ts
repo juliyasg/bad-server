@@ -14,14 +14,15 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'esnext',
     assetsInlineLimit:0,
   },
   css: {
     preprocessorOptions: {
       scss: {
         additionalData: `
-          @use "./src/scss/variables" as *;
-          @use "./src/scss/mixins";
+          @use "${resolve(__dirname, 'src/scss/variables').replace(/\\/g, '/')}" as *;
+          @use "${resolve(__dirname, 'src/scss/mixins').replace(/\\/g, '/')}";
         `,
       },
 

@@ -14,7 +14,6 @@ import {
     orderFormActions,
     orderFormSelector,
 } from '../../services/slice/orderForm'
-import EditorInput from '../editor-text/editor-input'
 import styles from './order.module.scss'
 
 export function OrderContacts() {
@@ -32,17 +31,14 @@ export function OrderContacts() {
             formRef.current
         )
 
-    useEffect(() => {
-        // восстанавливаем значение формы из стора
-        setValuesForm({
-            email: orderPersistData.email,
-            phone: orderPersistData.phone,
-        })
-    }, [orderPersistData])
-
-    const handleEditInputChange = (value: string) => {
-        setValuesForm({ ...values, comment: value })
-    }
+        useEffect(() => {
+            setValuesForm({
+                email: orderPersistData.email,
+                phone: orderPersistData.phone,
+                comment: orderPersistData.comment || '',
+            })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
 
     const handleFormSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -93,10 +89,14 @@ export function OrderContacts() {
                 error={errors.phone}
                 component={InputMask}
             />
-
-            <EditorInput
-                onChange={handleEditInputChange}
-                value={values.comment}
+            <Input
+                value={values.comment || ''}
+                onChange={handleChange}
+                name='comment'
+                type='text'
+                placeholder='Комментарий к заказу'
+                label='Комментарий'
+                error={errors.comment}
             />
 
             <div className={styles.order__buttons}>

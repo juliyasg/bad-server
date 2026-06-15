@@ -108,14 +108,16 @@ const Filter = ({
     useEffect(() => {
         if ((defaultValue as FiltersOrder)?.status) {
             const status = FILTER_ORDER_TYPES.find(
-                (item) => item.value === (defaultValue as FiltersOrder)?.status
+                (item) => item.value === (defaultValue as FiltersOrder).status
             )
+
             if (status) {
-                setSelects({ ...selects, status })
+                setSelects({ status })
             }
         }
-    }, [defaultValue])
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+    
     return (
         <Form
             formRef={formRef}

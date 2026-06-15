@@ -57,21 +57,24 @@ export default function AdminEditProduct() {
         }
     }
 
-    useEffect(() => {
-        const currentCategory = CATEGORY_TYPES.find(
-            (item) => item.title === currentProduct?.category
-        )
-        if (currentCategory) {
-            setSelectedCategory(currentCategory)
-        }
-        if (currentProduct) {
-            setValuesForm({
-                description: currentProduct.description,
-                price: currentProduct.price,
-                title: currentProduct.title,
-            })
-        }
-    }, [currentProduct])
+        useEffect(() => {
+            const currentCategory = CATEGORY_TYPES.find(
+                (item) => item.title === currentProduct?.category
+            )
+
+            if (currentCategory) {
+                setSelectedCategory(currentCategory)
+            }
+
+            if (currentProduct) {
+                setValuesForm({
+                    description: currentProduct.description,
+                    price: currentProduct.price,
+                    title: currentProduct.title,
+                })
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
 
     const handleUpdateProduct = async () => {
         if (!selectedCategory) {

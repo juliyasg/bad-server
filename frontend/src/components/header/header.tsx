@@ -10,7 +10,7 @@ export default function Header() {
     const user = useSelector(userSelectors.getUser)
     const isAdmin = useMatch('/admin/*')
     const location = useLocation()
-
+    
     return (
         <header className={styles.header}>
             <div className={styles.header__container}>
@@ -43,13 +43,13 @@ export default function Header() {
                 {user && (
                     <>
                         <Link
-                            to={AppRoute.Logout}
+                            to={{ pathname: AppRoute.Logout }}
+                            state={{ background: location }}
                             title='Выйти'
                             className={clsx(
                                 styles.header__icon,
                                 styles.header__logout
                             )}
-                            state={{ background: { ...location, state: null } }}
                         >
                             <span className={styles['header__icon-text']}>
                                 Выйти

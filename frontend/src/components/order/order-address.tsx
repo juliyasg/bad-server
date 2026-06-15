@@ -30,12 +30,13 @@ export function OrderAddress() {
             formRef.current
         )
 
-    useEffect(() => {
-        setValuesForm({
-            address: orderPersistData.address,
-            payment: PaymentType.Online,
-        })
-    }, [orderPersistData])
+        useEffect(() => {
+            setValuesForm({
+                address: orderPersistData.address,
+                payment: orderPersistData.payment,
+            })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
 
     const nextStep = () => {
         setInfo(values)

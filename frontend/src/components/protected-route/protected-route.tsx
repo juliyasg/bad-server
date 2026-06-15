@@ -4,6 +4,7 @@ import type { Location } from 'react-router-dom'
 import Spinner from '@components/spinner'
 import { userSelectors } from '@slices/user'
 import { useSelector } from '@store/hooks'
+import { AppRoute } from '@constants'
 import { Navigate, useLocation } from 'react-router-dom'
 
 type TProtectedRouteProps = {
@@ -11,12 +12,8 @@ type TProtectedRouteProps = {
     onlyUnAuth?: boolean
 }
 
-type BackgroundState = {
-    background?: Location
-}
-
 type FromState = {
-    from?: Location & BackgroundState
+    from?: Location
     background?: Location
 }
 
@@ -30,25 +27,28 @@ export default function ProtectedRoute({
     const isAuthChecked = useSelector(getIsAuthChecked)
 
     if (!isAuthChecked) {
-        console.log('WAIT USER CHECKOUT')
         return <Spinner />
     }
 
-    // Редирект на целевой компонент
     if (onlyUnAuth && user) {
-        console.log('NAVIGATE FROM LOGIN TO INDEX/FROM')
-        const from = location.state?.from || { pathname: '/' }
-        const background = location.state?.from?.background || null
-        return <Navigate replace to={from} state={{ background }} />
+        const from = location.state?.from
+
+        if (!from || from.pathname === AppRoute.Logout) {
+            return <Navigate replace to={AppRoute.Main} state={null} />
+        }
+
+        return <Navigate replace to={from} state={null} />
     }
 
-    // Редирект на страницу логина при отсутствии пользователя в сторе
     if (!onlyUnAuth && !user) {
-        console.log('NAVIGATE FROM PAGE TO LOGIN', location)
+        if (location.pathname === AppRoute.Logout) {
+            return <Navigate replace to={AppRoute.Main} state={null} />
+        }
+
         return (
             <Navigate
                 replace
-                to={'/login'}
+                to={AppRoute.Login}
                 state={{
                     from: {
                         ...location,
@@ -59,5 +59,5 @@ export default function ProtectedRoute({
         )
     }
 
-    return children // все хорошо и рендерим компонент
+    return children
 }

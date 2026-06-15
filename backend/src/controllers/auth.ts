@@ -118,7 +118,7 @@ const deleteRefreshTokenInUser = async (
 }
 
 // Реализация удаления токена из базы может отличаться
-// GET  /auth/logout
+// POST /auth/logout
 const logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await deleteRefreshTokenInUser(req, res, next)
@@ -135,7 +135,7 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-// GET  /auth/token
+// POST /auth/token
 const refreshAccessToken = async (
     req: Request,
     res: Response,
@@ -191,10 +191,17 @@ const updateCurrentUser = async (
     next: NextFunction
 ) => {
     const userId = res.locals.user._id
+    const { name, phone } = req.body
+
     try {
-        const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
-            new: true,
-        }).orFail(
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: { name, phone } },
+            {
+                new: true,
+                runValidators: true,
+            }
+        ).orFail(
             () =>
                 new NotFoundError(
                     'Пользователь по заданному id отсутствует в базе'

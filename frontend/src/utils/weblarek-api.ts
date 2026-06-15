@@ -32,6 +32,7 @@ export type ApiListResponse<Type> = {
 
 class Api {
     private readonly baseUrl: string
+    private csrfToken: string | null = null
     protected options: RequestInit
 
     constructor(baseUrl: string, options: RequestInit = {}) {
@@ -53,12 +54,40 @@ class Api {
                   )
     }
 
+    private getCsrfToken = async () => {
+        const res = await fetch(`${this.baseUrl}/auth/csrf-token`, {
+            method: 'GET',
+            credentials: 'include',
+        })
+
+        const data = await this.handleResponse<{ csrfToken: string }>(res)
+        this.csrfToken = data.csrfToken
+
+        return data.csrfToken
+    }
+
+    private isUnsafeMethod(method?: string) {
+        return method && !['GET', 'HEAD', 'OPTIONS'].includes(method.toUpperCase())
+    }
+
     protected async request<T>(endpoint: string, options: RequestInit) {
         try {
+            const headers = {
+                ...((this.options.headers as object) ?? {}),
+                ...((options.headers as object) ?? {}),
+            } as Record<string, string>
+
+            if (this.isUnsafeMethod(options.method)) {
+                const csrfToken = this.csrfToken ?? (await this.getCsrfToken())
+                headers['X-CSRF-Token'] = csrfToken
+            }
+
             const res = await fetch(`${this.baseUrl}${endpoint}`, {
                 ...this.options,
                 ...options,
+                headers,
             })
+
             return await this.handleResponse<T>(res)
         } catch (error) {
             return Promise.reject(error)
@@ -67,7 +96,7 @@ class Api {
 
     private refreshToken = () => {
         return this.request<UserResponseToken>('/auth/token', {
-            method: 'GET',
+            method: 'POST',
             credentials: 'include',
         })
     }
@@ -293,7 +322,7 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
 
     logoutUser = () => {
         return this.request<ServerResponse<unknown>>('/auth/logout', {
-            method: 'GET',
+            method: 'POST',
             credentials: 'include',
         })
     }
