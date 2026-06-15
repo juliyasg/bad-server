@@ -72,7 +72,6 @@ const createProduct = async (
     }
 }
 
-// TODO: Добавить guard admin
 // PUT /product
 const updateProduct = async (
     req: Request,
@@ -81,7 +80,7 @@ const updateProduct = async (
 ) => {
     try {
         const { productId } = req.params
-        const { image } = req.body
+        const { description, category, price, title, image } = req.body
 
         // Переносим картинку из временной папки
         if (image) {
@@ -96,9 +95,11 @@ const updateProduct = async (
             productId,
             {
                 $set: {
-                    ...req.body,
-                    price: req.body.price ? req.body.price : null,
-                    image: req.body.image ? req.body.image : undefined,
+                    description,
+                    category,
+                    title,
+                    price: price ?? null,
+                    image: image || undefined,
                 },
             },
             { runValidators: true, new: true }
@@ -120,7 +121,6 @@ const updateProduct = async (
     }
 }
 
-// TODO: Добавить guard admin
 // DELETE /product
 const deleteProduct = async (
     req: Request,

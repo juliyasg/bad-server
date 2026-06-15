@@ -2,15 +2,14 @@ import { AppRoute } from '@constants'
 import { userSelectors } from '@slices/user'
 import { useSelector } from '@store/hooks'
 import clsx from 'clsx'
-import { Link, useLocation, useMatch } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 import HeaderNavigateAdmin from './header-navigate-admin'
 import HeaderNavigateProfile from './header-navigate-profile'
 import styles from './header.module.scss'
 export default function Header() {
     const user = useSelector(userSelectors.getUser)
     const isAdmin = useMatch('/admin/*')
-    const location = useLocation()
-
+    
     return (
         <header className={styles.header}>
             <div className={styles.header__container}>
@@ -49,7 +48,6 @@ export default function Header() {
                                 styles.header__icon,
                                 styles.header__logout
                             )}
-                            state={{ background: { ...location, state: null } }}
                         >
                             <span className={styles['header__icon-text']}>
                                 Выйти

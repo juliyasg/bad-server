@@ -180,7 +180,7 @@ const RouteComponent = () => {
                     <Route
                         path={AppRoute.Login}
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute onlyUnAuth>
                                 <Modal onClose={handleModalClose(-1)}>
                                     <LoginPage />
                                 </Modal>

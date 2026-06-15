@@ -10,12 +10,13 @@ import {
     validateObjId,
     validateProductBody,
     validateProductUpdateBody,
+    validateProductQuery,
 } from '../middlewares/validations'
 import { Role } from '../models/user'
 
 const productRouter = Router()
 
-productRouter.get('/', getProducts)
+productRouter.get('/', validateProductQuery, getProducts)
 productRouter.post(
     '/',
     auth,

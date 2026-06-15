@@ -4,15 +4,22 @@ import { SyntheticEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useActionCreators } from '../../services/hooks'
 import { userActions } from '../../services/slice/user'
+import { AppRoute } from '../../utils/constants'
 import styles from './logout-page.module.scss'
+
 export default function LogoutPage() {
     const { logoutUser, resetUser } = useActionCreators(userActions)
     const navigate = useNavigate()
+
     const handleFormSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault()
+
         logoutUser()
             .unwrap()
-            .then(() => resetUser())
+            .then(() => {
+                resetUser()
+                navigate(AppRoute.Main, { replace: true, state: null })
+            })
     }
 
     return (

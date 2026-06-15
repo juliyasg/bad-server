@@ -14,7 +14,6 @@ import {
     orderFormActions,
     orderFormSelector,
 } from '../../services/slice/orderForm'
-import EditorInput from '../editor-text/editor-input'
 import styles from './order.module.scss'
 
 export function OrderContacts() {
@@ -40,9 +39,6 @@ export function OrderContacts() {
         })
     }, [orderPersistData, setValuesForm])
 
-    const handleEditInputChange = (value: string) => {
-        setValuesForm({ ...values, comment: value })
-    }
 
     const handleFormSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -92,11 +88,6 @@ export function OrderContacts() {
                 required
                 error={errors.phone}
                 component={InputMask}
-            />
-
-            <EditorInput
-                onChange={handleEditInputChange}
-                value={values.comment}
             />
 
             <div className={styles.order__buttons}>
